@@ -68,59 +68,79 @@
 #define SEGMENT_COLORS 100
 
 //Futere: make template that defines the point type from the beginning
-class align
-{
-	public:
-		align();
-		align(std::string refFile);
-		align(std::string refFile,const int m);
-		virtual ~align();
-		
-		
-		void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& cloud_msg);
-		void publishRef(ros::Publisher *pub);
-		void publishScene(ros::Publisher *pub);
-		void publishAligned(ros::Publisher *pub);
-		void publishSegmented(ros::Publisher *pub);
-		void loadRef(std::string refFile);
-		
-		void passthroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr& sourceCloud,
-                            pcl::PointCloud<pcl::PointXYZ>::Ptr& filteredCloud,
-                            const std::string& axis, float minPoint, float maxPoint);
-        void voxelFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr& sourceCloud,
-                      pcl::PointCloud<pcl::PointXYZ>::Ptr& filteredCloud,
-                      float leafSize);
-        void normalEstimation(pcl::PointCloud<pcl::PointXYZ>::Ptr& scene,pcl::PointCloud<pcl::PointNormal>::Ptr& normals);
-        void featureEstimation(pcl::PointCloud<pcl::PointXYZ>::Ptr& input,pcl::PointCloud<pcl::PointNormal>::Ptr& input_normals,pcl::PointCloud<pcl::FPFHSignature33>::Ptr& features);
-        
-        void runICP(pcl::PointCloud<pcl::PointXYZ>::Ptr& object,pcl::PointCloud<pcl::PointXYZ>::Ptr& scene,pcl::PointCloud<pcl::FPFHSignature33>::Ptr& object_features,
-                   pcl::PointCloud<pcl::FPFHSignature33>::Ptr& scene_features,pcl::PointCloud<pcl::PointXYZ>::Ptr& object_aligned);
-		void euclideanSegment(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud,
-                         std::vector<pcl::PointIndices> &cluster_indices);
-        void extractSegmentCluster (const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud, const std::vector<pcl::PointIndices> cluster_indices, const int segment_index, pcl::PointCloud<pcl::PointXYZRGB>::Ptr& result);
-        uint32_t segmentColor (int segment);
-        uint32_t genColors(int nr);
+class align {
+public:
+    align();
 
-        ros::NodeHandle nh;
-        
-	private:
-		pcl::PointCloud<pcl::PointXYZ> *refCloud;
-		pcl::PointCloud<pcl::PointXYZ> *refAligned;
-		pcl::PointCloud<pcl::PointNormal> *refNormals;
-		pcl::PointCloud<pcl::PointXYZ> *sceneCloud;
-		pcl::PointCloud<pcl::PointNormal> *sceneNormals;
-		
-		sensor_msgs::PointCloud2 output_msg;
-		sensor_msgs::PointCloud2 aligned_msg;
-		sensor_msgs::PointCloud2 segmented_msg;
-		
-		uint8_t rgbs[SEGMENT_COLORS][3];
+    align(std::string refFile);
 
-		int clusters_detected;
-		
-		float leaf;
-		int mode;
-		
+    align(std::string refFile, const int m);
+
+    virtual ~align();
+
+
+    void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &cloud_msg);
+
+    void publishRef(ros::Publisher *pub);
+
+    void publishScene(ros::Publisher *pub);
+
+    void publishAligned(ros::Publisher *pub);
+
+    void publishSegmented(ros::Publisher *pub);
+
+    void loadRef(std::string refFile);
+
+    void passthroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr &sourceCloud,
+                           pcl::PointCloud<pcl::PointXYZ>::Ptr &filteredCloud,
+                           const std::string &axis, float minPoint, float maxPoint);
+
+    void voxelFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr &sourceCloud,
+                     pcl::PointCloud<pcl::PointXYZ>::Ptr &filteredCloud,
+                     float leafSize);
+
+    void normalEstimation(pcl::PointCloud<pcl::PointXYZ>::Ptr &scene, pcl::PointCloud<pcl::PointNormal>::Ptr &normals);
+
+    void
+    featureEstimation(pcl::PointCloud<pcl::PointXYZ>::Ptr &input, pcl::PointCloud<pcl::PointNormal>::Ptr &input_normals,
+                      pcl::PointCloud<pcl::FPFHSignature33>::Ptr &features);
+
+    void runICP(pcl::PointCloud<pcl::PointXYZ>::Ptr &object, pcl::PointCloud<pcl::PointXYZ>::Ptr &scene,
+                pcl::PointCloud<pcl::FPFHSignature33>::Ptr &object_features,
+                pcl::PointCloud<pcl::FPFHSignature33>::Ptr &scene_features,
+                pcl::PointCloud<pcl::PointXYZ>::Ptr &object_aligned);
+
+    void euclideanSegment(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud,
+                          std::vector<pcl::PointIndices> &cluster_indices);
+
+    void extractSegmentCluster(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud,
+                               const std::vector<pcl::PointIndices> cluster_indices, const int segment_index,
+                               pcl::PointCloud<pcl::PointXYZRGB>::Ptr &result);
+
+    uint32_t segmentColor(int segment);
+
+    uint32_t genColors(int nr);
+
+    ros::NodeHandle nh;
+
+private:
+    pcl::PointCloud <pcl::PointXYZ> *refCloud;
+    pcl::PointCloud <pcl::PointXYZ> *refAligned;
+    pcl::PointCloud <pcl::PointNormal> *refNormals;
+    pcl::PointCloud <pcl::PointXYZ> *sceneCloud;
+    pcl::PointCloud <pcl::PointNormal> *sceneNormals;
+
+    sensor_msgs::PointCloud2 output_msg;
+    sensor_msgs::PointCloud2 aligned_msg;
+    sensor_msgs::PointCloud2 segmented_msg;
+
+    uint8_t rgbs[SEGMENT_COLORS][3];
+
+    int clusters_detected;
+
+    float leaf;
+    int mode;
+
 };
 
 #endif /* ALIGN_H */ 
